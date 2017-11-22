@@ -33,63 +33,91 @@
             });
         });
     </script>
+    
+    <!--test dhtmlxSlider_v51 sliders -->
+    <link rel="stylesheet" type="text/css" href="../dhtmlxSlider_v51_std/codebase/fonts/font_roboto/roboto.css"/>
+    <link rel="stylesheet" type="text/css" href="../dhtmlxSlider_v51_std/codebase/dhtmlxslider.css"/>
+	<link rel="stylesheet" type="text/css" href="../dhtmlxSlider_v51_std/skins/web/dhtmlxslider.css"/>
+    <script src="../dhtmlxSlider_v51_std/codebase/dhtmlxslider.js"></script>
+    <style>
+        #sliderObj {
+            width: 160px;
+            height: 40px;
+        }
+    </style>
+    <script>
+        var mySlider, mySlider2;
+        
+        function doOnLoad(){
+            mySlider = new dhtmlXSlider({
+                parent: "sliderObj",
+                size: 600,
+                value: 5,
+                step: 1,
+                min: 1,
+                max: 10
+            });
+            mySlider.setSkin('dhx_web');
+        };
+        
+        function doOnUnload(){
+            if (mySlider != null){
+                mySlider.unload();
+                mySlider = null;
+            }
+        };
+    </script>
+    
+    
+    
+    <!--test range sliders -->
+    <link rel="stylesheet" href="range-slider.css">
+    <style>
+        *,
+        *:before,
+        *:after {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        html {
+            color: #404040;
+            font-family: Helvetica, arial, sans-serif;
+        }
+
+        body {
+            padding: 50px 20px;
+            margin: 0 auto;
+        }
+
+        output {
+            display: block;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            margin: 30px 0;
+            width: 100%;
+        }
+    </style>
 
 </head>
-<body>
+<body  onload="doOnLoad();" onunload="doOnUnload();">
 
-<ul id="menu">
-    <li data-menuanchor="firstPage" class="active"><a href="#firstPage">First slide</a></li>
-    <li data-menuanchor="secondPage"><a href="#secondPage">Second slide</a></li>
-    <li data-menuanchor="3rdPage"><a href="#3rdPage">Third slide</a></li>
-</ul>
-
-<select id="demosMenu">
-  <option selected>Choose Demo</option>
-  <option id="activeSlide">Active section and slide</option>
-  <option id="apple">Apple iPhone demo (animations)</option>
-  <option id="autoHeight">Auto height</option>
-  <option id="autoplayVideoAndAudio">Autoplay Video and Audio</option>
-  <option id="backgrounds">Background images</option>
-  <option id="backgroundsFixed">Fixed fullscreen backgrounds</option>
-  <option id="backgroundVideo">Background video</option>
-  <option id="callbacks">Callbacks</option>
-  <option id="continuousHorizontal">Continuous horizontal</option>
-  <option id="continuousVertical">Continuous vertical</option>
-  <option id="parallax">Parallax</option>
-  <option id="css3">CSS3</option>
-  <option id="dragAndMove">Drag And Move</option>
-  <option id="easing">Easing</option>
-  <option id="fadingEffect">Fading Effect</option>
-  <option id="fixedHeaders">Fixed headers</option>
-  <option id="gradientBackgrounds">Gradient backgrounds</option>
-  <option id="interlockedSlides">Interlocked Slides</option>
-  <option id="looping">Looping</option>
-  <option id="methods">Methods</option>
-  <option id="navigationV">Vertical navigation dots</option>
-  <option id="navigationH">Horizontal navigation dots</option>
-  <option id="noAnchor">No anchor links</option>
-  <option id="normalScroll">Normal scrolling</option>
-  <option id="normalScrollElements">Normal scroll elements</option>
-  <option id="offsetSections">Offset sections</option>
-  <option id="oneSection">One single section</option>
-  <option id="resetSliders">Reset sliders</option>
-  <option id="responsiveAutoHeight">Responsive Auto Height</option>
-  <option id="responsiveHeight">Responsive Height</option>
-  <option id="responsiveWidth">Responsive Width</option>
-  <option id="responsiveSlides">Responsive Slides</option>
-  <option id="scrollBar">Scroll bar enabled</option>
-  <option id="scrollHorizontally">Scroll horizontally</option>
-  <option id="scrollOverflow">Scroll inside sections and slides</option>
-  <option id="scrollOverflowReset">ScrollOverflow Reset</option>
-  <option id="lazyLoad">Lazy load</option>
-  <option id="scrollingSpeed">Scrolling speed</option>
-</select>
 
 <div id="fullpage">
     <div class="section " id="section0">
-        <h1>fullPage.js</h1>
+        <h1>Are you happy?</h1>
         <p>Continuous Scrolling Enabled</p>
-        <img src="imgs/fullPage.png" alt="fullPage" />
+        <input type="range" min="0" max="50" value="25" step="5" />
+        <tr>
+            <td><div id="sliderObj"></div></td>
+        </tr>
+        <div>
+            <h2>Choose</h2>
+            <input type="range" min="-20" max="20" data-rangeSlider>
+            <output></output>
+        </div>
     </div>
     <div class="section active" id="section1">
         <div class="slide" id="slide1">
@@ -113,6 +141,60 @@
         </div>
     </div>
 </div>
+
+<script src="range-slider.js"></script>
+<script>
+  (function () {
+
+    var selector = '[data-rangeSlider]',
+      elements = document.querySelectorAll(selector);
+
+    // Example functionality to demonstrate a value feedback
+    function valueOutput(element) {
+      var value = element.value,
+        output = element.parentNode.getElementsByTagName('output')[0];
+      output.innerHTML = value;
+    }
+
+    for (var i = elements.length - 1; i >= 0; i--) {
+      valueOutput(elements[i]);
+    }
+
+    Array.prototype.slice.call(document.querySelectorAll('input[type="range"]')).forEach(function (el) {
+      el.addEventListener('input', function (e) {
+        valueOutput(e.target);
+      }, false);
+    });
+
+    // Basic rangeSlider initialization
+    rangeSlider.create(elements, {
+
+      // Callback function
+      onInit: function () {
+      },
+
+      // Callback function
+      onSlideStart: function (value, percent, position) {
+        console.info('onSlideStart', 'value: ' + value, 'percent: ' + percent, 'position: ' + position);
+      },
+
+      // Callback function
+      onSlide: function (value, percent, position) {
+        console.log('onSlide', 'value: ' + value, 'percent: ' + percent, 'position: ' + position);
+      },
+
+      // Callback function
+      onSlideEnd: function (value, percent, position) {
+        console.warn('onSlideEnd', 'value: ' + value, 'percent: ' + percent, 'position: ' + position);
+      }
+    });
+
+    rangeSlider.create(document.querySelector('#vertical'), {
+      vertical: true
+    });
+
+  })();
+</script>
 
 </body>
 </html>
