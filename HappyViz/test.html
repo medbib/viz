@@ -21,18 +21,24 @@
   stroke-width: .5px;
 }
 
+body {
+    background-color: lightblue;
+}
+
 </style>
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>
 <script>
 
+
+
 <!--
 var w=window,d=document,e=d.documentElement,g=d.getElementsByTagName('body')[0],x=w.innerWidth||e.clientWidth||g.clientWidth,y=w.innerHeight||e.clientHeight||g.clientHeight;
 //-->
 
-var width = x-100,
-    height = y-100;
+var width = x,
+    height = y;
 
 var projection = d3.geo.mercator()
     .scale((width + 1) / 2 / Math.PI)
@@ -116,3 +122,4 @@ d3.json("https://raw.githubusercontent.com/d3/d3-geo/master/test/data/world-50m.
 d3.select(self.frameElement).style("height", height + "px");
 
 </script>
+</body>
