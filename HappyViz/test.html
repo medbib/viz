@@ -65,7 +65,7 @@ var zoom = d3.behavior.zoom()
 var scale0 = [1,1];
 
 function zoomed(){
-  console.log(d3.event.translate[0] + ' | ' + d3.event.translate[0]/scale0[0]);
+  //console.log(d3.event.translate[0] + ' | ' + d3.event.translate[0]/scale0[0]);
   scale0 = d3.event.translate;
   //console.log(d3.select("#viz-wrapper"));
   d3.select("#viz-wrapper").attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
@@ -101,6 +101,10 @@ d3.json("world-50m.json", function(error, world) {
 d3.json("https://raw.githubusercontent.com/d3/d3-geo/master/test/data/world-50m.json", function(error, world) {
   var countries = topojson.feature(world, world.objects.countries).features,
       neighbors = topojson.neighbors(world.objects.countries.geometries);
+      
+  str = JSON.stringify(countries, null, 4); // (Optional) beautiful indented output.
+  console.log(str);
+  console.log("hey");
 
   viz.selectAll(".country")
       .data(countries)
@@ -109,7 +113,7 @@ d3.json("https://raw.githubusercontent.com/d3/d3-geo/master/test/data/world-50m.
       .attr("class", function(d){ return "country "+d.id })
       .attr("d", path)
       //.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0); });
-      .style("fill", function(d,i){ return color(Math.random()*20); })
+      .style("fill", function(d,i){ return color(i == 1 ? 10 : 0); })
 /*
   viz.insert("path", ".graticule")
       .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
