@@ -14,12 +14,11 @@
         });
     });
 
-    var countries_datas = {};
 
     function processData(allText) {
         var allTextLines = allText.split(/\r\n|\n/);
         var headers = allTextLines[0].split(',');
-
+        var countries_datas = {};
         for (var i=1; i<allTextLines.length; i++) {
             var data = allTextLines[i].split(',');
             if (data.length == headers.length) {
@@ -32,17 +31,40 @@
         }
         // alert(lines);
         console.log(countries_datas);
+        processColoration(countries_datas);
     }
     
+    //https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
     function shadeColor2(color, percent) {   
         var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
         return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
     }
+    
+    var colored_countries = {};
+    function processColoration(countries_datas)
+    {
+        var countries_codes = {}
+        var countries = Datamap.prototype.worldTopo.objects.world.geometries;
+        for (var i = 0; i < countries.length; i++) {
+          countries_codes[countries[i].properties.name] = countries[i].id;
+        }
+        console.log(countries_codes["Australia"]);
 
+        console.log(countries_datas["Afghanistan"]["Happiness Score"], "yeah");
+        for (var country_name in countries_codes) {
+          var happiness = country_name in countries_datas && "Happiness Score" in countries_datas[country_name] ? countries_datas[country_name]["Happiness Score"] : 0;
+          console.log(happiness, shadeColor2('#3f83a3', happiness/10));
+          colored_countries[countries_codes[country_name]] = shadeColor2('#3f83a3', happiness/10);
+          //console.log(country_name, countries_datas[country_name]["Happiness Score"]);
+        }
+        
+        map.updateChoropleth(colored_countries);
+    }
+    
     //DataMaps
     var map = new Datamap({
     element: document.getElementById('container'),
-    fills: {
+    /*fills: {
           defaultFill: '#f0af0a',
           lt50: shadeColor2('#3f83a3', 0),
           gt50: 'red'
@@ -58,14 +80,10 @@
           ZAF: {fillKey: 'gt50' },
           MAD: {fillKey: 'gt50' }       
         }
+    }*/
+    //data: colored_countries
     });
     
-    var countries_codes = {}
-    var countries = Datamap.prototype.worldTopo.objects.world.geometries;
-    for (var i = 0, j = countries.length; i < j; i++) {
-      countries_codes[countries[i].properties.name] = countries[i].id;
-    }
-    console.log(countries_codes["Australia"]);
 </script>
 <style>
 body {
