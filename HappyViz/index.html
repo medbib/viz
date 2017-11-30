@@ -28,8 +28,9 @@
         $(document).ready(function() {
             $('#fullpage').fullpage({
               sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE', 'whitesmoke', '#ccddff'],
-              anchors: ['firstPage', 'secondPage', '3rdPage', '4thpage', '5thpage', '6thpage', '7thpage', '8thpage', '9thpage'],
+              anchors: ['firstPage', 'secondPage', '3rdPage', '4thpage', '5thpage', '6thpage', '7thpage', '8thpage', '9thpage', '10thpage', '11thpage', '12thpage'],
               menu: '#menu',
+              navigation: true
             });
         });
     </script>
@@ -68,7 +69,6 @@
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>
-
 
 <div id="fullpage">
     <div class="section " id="section0">
@@ -258,23 +258,28 @@
     
     <div class="section " id="section6">
         <p>Money?</p>
-        <input type="range" min="0" max="10" data-rangeSlider>
-        <output></output>
+        <input type="range" min="0" max="10">
         <p>Freedom?</p>
-        <input type="range" min="0" max="10" data-rangeSlider>
-        <output></output>
+        <input type="range" min="0" max="10">
         <p>Family?</p>
-        <input type="range" min="0" max="10" data-rangeSlider>
-        <output></output>
+        <input type="range" min="0" max="10">
         <p>Trust in Governement?</p>
-        <input type="range" min="0" max="10" data-rangeSlider>
-        <output></output>
+        <input type="range" min="0" max="10">
         <p>Generosity?</p>
-        <input type="range" min="0" max="10" data-rangeSlider>
-        <output></output>
+        <input type="range" min="0" max="10">
         <p>Health?</p>
-        <input type="range" min="0" max="10" data-rangeSlider>
-        <output></output>
+        <input type="range" min="0" max="10">
+    </div>
+    
+    <div class="section " id="section7">
+        <p>Your values and perception of happiness is very close to the people of Germany!</p>
+    </div>
+    
+    <div class="section " id="section8">
+        <p>Oops, Germany is not really happy since it is only ranked 72th<br>
+        Your own country France is ranked 44th!<br>
+        You might reconsider your values ;)
+        </p>
     </div>
     
     <!--div class="section active" id="section1">
