@@ -47,15 +47,14 @@
         for (var i = 0; i < countries.length; i++) {
           countries_codes[countries[i].properties.name] = countries[i].id;
         }
-        console.log(countries_codes["Australia"]);
-
-        //console.log(countries_datas["Afghanistan"]["Happiness Score"], "yeah");
         
-        //console.log(countries_datas["France"]["Happiness Score"], "yeah");
+        console.log(countries_codes);
+        
         var colored_countries = {};
         for (var country_name in countries_codes) {
           //console.log(country_name);
-          if(country_name in countries_datas && "Happiness Score" in countries_datas[country_name])
+          if(country_name in countries_datas && "Happiness Score" in countries_datas[country_name]
+          && countries_codes[country_name] != "-99")
           {
             var happiness = countries_datas[country_name]["Happiness Score"];
             //console.log(happiness, shadeColor2('#3f83a3', happiness/10));
