@@ -58,14 +58,12 @@
         
         var colored_countries = {};
         for (var country_name in countries_codes) {
-          //console.log(country_name);
           if(country_name in countries_datas && "Happiness Score" in countries_datas[country_name]
           && countries_codes[country_name] != "-99")
           {
+            //document.write('<option value="' + country_name + '">' + country_name + '</option>\r\n');
             var happiness = (countries_datas[country_name]["Happiness Score"] - mini) / (maxi - mini);
-            //console.log(happiness, shadeColor2('#3f83a3', happiness/10));
             colored_countries[countries_codes[country_name]] = blendColors('#3f83a3', '#f48000', happiness);
-            //console.log(country_name, countries_datas[country_name]["Happiness Score"]);
           }
         }
         console.log(colored_countries);
