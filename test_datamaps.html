@@ -1,0 +1,85 @@
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+<script src="datamaps.world.min.js"></script>
+<div id="container" style="position: relative; width: 100%; height: 100%;"></div>
+<script>
+    //CSV reading
+    $(document).ready(function() {
+        $.get("2015.csv", function (data) {
+            countries_datas = get_countries_datas(data);
+            processColoration(countries_datas);
+        });
+    });
+
+    function get_countries_datas(data)
+    {
+        var countries_datas = {};
+        var allTextLines = data.split(/\r\n|\n/);
+        var headers = allTextLines[0].split(',');
+        for (var i=1; i<allTextLines.length; i++) {
+            var data = allTextLines[i].split(',');
+            if (data.length == headers.length) {
+                var country = data[0];
+                countries_datas[country] = {};
+                for (var j=1; j<headers.length; j++) {
+                    countries_datas[country][headers[j]] = (j == 1 ? data[j] : parseFloat(data[j]));
+                }
+            }
+        }
+        return countries_datas;
+    }
+    
+    //https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
+    function shadeColor2(color, percent) {   
+        var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
+        return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
+    }
+    function blendColors(c0, c1, p) {
+        var f=parseInt(c0.slice(1),16),t=parseInt(c1.slice(1),16),R1=f>>16,G1=f>>8&0x00FF,B1=f&0x0000FF,R2=t>>16,G2=t>>8&0x00FF,B2=t&0x0000FF;
+        return "#"+(0x1000000+(Math.round((R2-R1)*p)+R1)*0x10000+(Math.round((G2-G1)*p)+G1)*0x100+(Math.round((B2-B1)*p)+B1)).toString(16).slice(1);
+    }
+
+    function processColoration(countries_datas)
+    {
+        var mini = 2.839, maxi = 7.587; //to calculate, no magic number
+            
+        var countries_codes = {}
+        var countries = Datamap.prototype.worldTopo.objects.world.geometries;
+        for (var i = 0; i < countries.length; i++) {
+          countries_codes[countries[i].properties.name] = countries[i].id;
+        }
+        
+        console.log(countries_codes);
+        
+        var colored_countries = {};
+        for (var country_name in countries_codes) {
+          if(country_name in countries_datas && "Happiness Score" in countries_datas[country_name]
+          && countries_codes[country_name] != "-99")
+          {
+            //document.write('<option value="' + country_name + '">' + country_name + '</option>\r\n');
+            var happiness = (countries_datas[country_name]["Happiness Score"] - mini) / (maxi - mini);
+            colored_countries[countries_codes[country_name]] = blendColors('#3f83a3', '#f48000', happiness);
+          }
+        }
+        console.log(colored_countries);
+        map.updateChoropleth(colored_countries);
+    }
+    
+    //DataMaps
+    var map = new Datamap({
+    element: document.getElementById('container'),
+    fills: {
+          defaultFill: '#c0c0c0'
+        }
+    });
+    
+</script>
+<style>
+body {
+    background-color: lightblue;
+}
+</style>
