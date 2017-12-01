@@ -249,30 +249,30 @@
     <div class="section " id="section4">
         <h1>Happier than your compatriots...</h1>
         <p>Congrats!</p>
-        <iframe sandbox="allow-popups allow-scripts allow-forms allow-same-origin" src="test_datamaps.html" marginwidth="0" marginheight="0" style="width: 860px; height: 400px;" scrolling="no"></iframe>
-    </div>
+        <iframe id="iframex" sandbox="allow-popups allow-scripts allow-forms allow-same-origin" src="test_datamaps.html" marginwidth="0" marginheight="0" style="width: 860px; height: 400px;" scrolling="no"></iframe>
+   </div>
     
     <div class="section " id="section5">
         <h1>But what do you think makes you happy?</h1>
     </div>
     
     <div class="section " id="section6">
-        <p>Money?</p>
-        <input type="range" min="0" max="10">
-        <p>Freedom?</p>
-        <input type="range" min="0" max="10">
-        <p>Family?</p>
-        <input type="range" min="0" max="10">
-        <p>Trust in Governement?</p>
-        <input type="range" min="0" max="10">
-        <p>Generosity?</p>
-        <input type="range" min="0" max="10">
-        <p>Health?</p>
-        <input type="range" min="0" max="10">
+        <p>Money</p>
+        <input type="range" min="0" max="10" id="Economy (GDP per Capita)" onchange="modify_value()">
+        <p>Freedom</p>
+        <input type="range" min="0" max="10" id="Freedom" onchange="modify_value()">
+        <p>Family</p>
+        <input type="range" min="0" max="10" id="Family" onchange="modify_value()">
+        <p>Trust in Governement</p>
+        <input type="range" min="0" max="10" id="Trust (Government Corruption)" onchange="modify_value()">
+        <p>Generosity</p>
+        <input type="range" min="0" max="10" id="Generosity" onchange="modify_value()">
+        <p>Health</p>
+        <input type="range" min="0" max="10" id="Health (Life Expectancy)" onchange="modify_value()">
     </div>
     
     <div class="section " id="section7">
-        <p>Your values and perception of happiness is very close to the people of Germany!</p>
+        <p id="p_comparison"></p>
     </div>
     
     <div class="section " id="section8">
@@ -306,8 +306,74 @@
 </div>
 
 <script src="range-slider.js"></script>
+
 <script>
-  (function () {
+    //doublon with test_datamaps.html, put in JavaScript file
+    function get_countries_datas(data)
+    {
+        var countries_datas = {};
+        var allTextLines = data.split(/\r\n|\n/);
+        var headers = allTextLines[0].split(',');
+        for (var i=1; i<allTextLines.length; i++) {
+            var data = allTextLines[i].split(',');
+            if (data.length == headers.length) {
+                var country = data[0];
+                countries_datas[country] = {};
+                for (var j=1; j<headers.length; j++) {
+                    countries_datas[country][headers[j]] = (j == 1 ? data[j] : parseFloat(data[j]));
+                }
+            }
+        }
+        return countries_datas;
+    }
+
+    var sliders_names = ["Economy (GDP per Capita)", "Freedom", "Family", "Trust (Government Corruption)", "Generosity", "Health (Life Expectancy)"];
+    var countries_datas;
+    $(document).ready(function() {
+        $.get("2015.csv", function (data) {
+            countries_datas = get_countries_datas(data);
+            for(var country_name in countries_datas) {
+                var sum = 0;
+                for(var i=0; i<sliders_names.length; i++)
+                    sum += countries_datas[country_name][sliders_names[i]];
+                for(var i=0; i<sliders_names.length; i++)
+                    countries_datas[country_name][sliders_names[i]] /= sum;
+            }
+            modify_value();
+        });
+    });
+
+  function modify_value() {
+    var values = [];
+    var sum = 0;
+    for(var i=0; i<sliders_names.length; i++) {
+        values.push(parseFloat(document.getElementById(sliders_names[i]).value));
+        sum += values[i];
+    }
+    var msg = "You're so sad :(";
+    if(sum > 1e-5)
+    {
+        for(var i=0; i<sliders_names.length; i++)
+            values[i] /= sum;
+        console.log(values);
+        var country = "", distMin = 1000;
+        for(var country_name in countries_datas) {
+            var dist = 0;
+            for(var i=0; i<sliders_names.length; i++)
+                dist += Math.pow(values[i] - countries_datas[country_name][sliders_names[i]], 2);
+            if(dist < distMin)
+            {
+                distMin = dist;
+                country = country_name;
+            }
+        }
+        msg = "Your values and perception of happiness is very close to the people of " + country;
+    }
+    document.getElementById('p_comparison').innerHTML = msg;
+  }
+</script>
+<script>
+  /*(function () {
 
     var selector = '[data-rangeSlider]',
       elements = document.querySelectorAll(selector);
@@ -356,7 +422,7 @@
       vertical: true
     });
 
-  })();
+  })();*/
 </script>
 
 </body>

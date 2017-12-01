@@ -10,15 +10,16 @@
     //CSV reading
     $(document).ready(function() {
         $.get("2015.csv", function (data) {
-            processData(data);
+            countries_datas = get_countries_datas(data);
+            processColoration(countries_datas);
         });
     });
 
-
-    function processData(allText) {
-        var allTextLines = allText.split(/\r\n|\n/);
-        var headers = allTextLines[0].split(',');
+    function get_countries_datas(data)
+    {
         var countries_datas = {};
+        var allTextLines = data.split(/\r\n|\n/);
+        var headers = allTextLines[0].split(',');
         for (var i=1; i<allTextLines.length; i++) {
             var data = allTextLines[i].split(',');
             if (data.length == headers.length) {
@@ -29,9 +30,7 @@
                 }
             }
         }
-        // alert(lines);
-        console.log(countries_datas);
-        processColoration(countries_datas);
+        return countries_datas;
     }
     
     //https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
@@ -46,7 +45,7 @@
 
     function processColoration(countries_datas)
     {
-        var mini = 2.839, maxi = 7.587;
+        var mini = 2.839, maxi = 7.587; //to calculate, no magic number
             
         var countries_codes = {}
         var countries = Datamap.prototype.worldTopo.objects.world.geometries;
